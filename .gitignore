@@ -3,4 +3,4 @@ VarioVL/Info.plist
 build/
 Payload/
 *.ipa
-verification
+verif_calculs

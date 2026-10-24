@@ -12,9 +12,9 @@ jobs:
       - name: Vérifier les calculs
         run: |
           set +e
-          swiftc -O VarioVL/Calculs.swift Verification/main.swift -o verification > sortie.txt 2>&1
+          swiftc -O VarioVL/Calculs.swift Verification/main.swift -o verif_calculs > sortie.txt 2>&1
           code=$?
-          if [ $code -eq 0 ]; then ./verification >> sortie.txt 2>&1; code=$?; fi
+          if [ $code -eq 0 ]; then ./verif_calculs >> sortie.txt 2>&1; code=$?; fi
           cat sortie.txt
           if [ $code -ne 0 ]; then
             # Le message part aussi en annotation : lisible sans être connecté à GitHub (API publique).
