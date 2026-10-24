@@ -18,8 +18,8 @@ Application iPhone de Laurent (compte GitHub **Noyau007**, dépôt prévu : **va
    github.com : *Add file → Upload files*, en glissant les dossiers).
 3. Onglet **Actions** du dépôt : la compilation « Compiler Vario VL » se lance à chaque envoi (environ 5 minutes).
    Elle vérifie d'abord les calculs, puis compile. En cas d'échec, copier le message d'erreur à Claude.
-4. Quand elle est verte : ouvrir la compilation, télécharger l'artefact **VarioVL-ipa** (un .zip qui contient
-   `VarioVL.ipa`).
+4. Quand elle est verte, le fichier est publié à une adresse fixe (dernière version, sans connexion) :
+   https://github.com/noyau007/vario-vl/releases/latest/download/VarioVL.ipa
 
 ## Installer sur l'iPhone (PC Windows, gratuit)
 1. Installer **iTunes depuis le site d'Apple** (pas la version du Microsoft Store), puis **Sideloadly** (sideloadly.io).
