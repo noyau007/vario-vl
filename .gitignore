@@ -1,0 +1,6 @@
+VarioVL.xcodeproj/
+VarioVL/Info.plist
+build/
+Payload/
+*.ipa
+verification
