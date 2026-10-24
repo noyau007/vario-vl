@@ -8,26 +8,41 @@ jobs:
   ipa:
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Vérifier les calculs
         run: |
-          swiftc -O VarioVL/Calculs.swift Verification/main.swift -o verification
-          ./verification
+          set +e
+          swiftc -O VarioVL/Calculs.swift Verification/main.swift -o verification > sortie.txt 2>&1
+          code=$?
+          if [ $code -eq 0 ]; then ./verification >> sortie.txt 2>&1; code=$?; fi
+          cat sortie.txt
+          if [ $code -ne 0 ]; then
+            # Le message part aussi en annotation : lisible sans être connecté à GitHub (API publique).
+            echo "::error title=Calculs::$(tail -80 sortie.txt | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')"
+            exit 1
+          fi
       - name: Installer XcodeGen
         run: brew install xcodegen
       - name: Générer le projet Xcode
         run: xcodegen generate
       - name: Compiler pour iPhone (sans signature)
         run: |
+          set +e
           xcodebuild -project VarioVL.xcodeproj -scheme VarioVL -configuration Release \
             -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath build \
-            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build > xcode.txt 2>&1
+          code=$?
+          tail -200 xcode.txt
+          if [ $code -ne 0 ]; then
+            echo "::error title=Compilation::$( (grep -E 'error:|warning: .*deprecated' xcode.txt | sort -u | head -40; echo ---; tail -30 xcode.txt) | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')"
+            exit 1
+          fi
       - name: Fabriquer VarioVL.ipa
         run: |
           mkdir -p Payload
           cp -R build/Build/Products/Release-iphoneos/VarioVL.app Payload/
           zip -qry VarioVL.ipa Payload
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: VarioVL-ipa
           path: VarioVL.ipa

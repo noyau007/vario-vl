@@ -53,8 +53,11 @@ struct FiltreVario {
 
 /// Vitesse verticale moyenne sur les `duree` dernières secondes (différence d'altitude / temps).
 struct MoyenneGlissante {
-    var duree: Double = 20
+    var duree: Double
     private var points: [(t: Double, h: Double)] = []
+
+    // Écrit à la main : avec un champ privé, l'initialiseur automatique serait privé lui aussi.
+    init(duree: Double = 20) { self.duree = duree }
 
     mutating func ajouter(temps: Double, altitude: Double) -> Double? {
         points.append((temps, altitude))
